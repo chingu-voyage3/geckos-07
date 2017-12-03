@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>My First React Example</title>
+  </head>
+  <body>
+    <div id="greeting-div"></div>
+
+<script crossorigin src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
+    <script type="text/babel">
+        class App extends React.Component{
+            constructor(props){
+            super(props);
+            //State Elements 
+            // levels:[all lvevls]
+            // 
+            this.state={levels:this.getLevels("all"),currentLevel:this.getLevels(1)};
+            }
+            // Data container for levels
+            getLevels(level){
+                var levelsObject = {};
+                var level1 = {rows:this.getLevelRows(1),blockWidth:5,blockHeight:5};
+                if(level === "all"){
+                levelsObject.level1 = level1;
+                return levelsObject;
+                }
+                switch(level){
+                    case 1:
+                        levelsObject = level1;
+                        return levelsObject;
+                       }
+            }
+            getLevelRows(level){
+                if(level == 1){
+                var rowArray = [];
+                var rowObject1 = {startX:0,startY:0,endX:500};
+                var rowObject2 = {startX:500,startY:10,endX:700};
+                rowArray.push(rowObject1);
+                rowArray.push(rowObject2);
+                return rowArray;
+                }
+            }
+            render(){
+                return(
+                <Map rows={this.state.currentLevel.rows}
+                    blockWidth={this.state.currentLevel.blockWidth}
+                    blockHeight={this.state.currentLevel.blockHeight}/>
+            )
+        }
+    }
+
+        
+        class Block extends React.Component{
+            constructor(props){
+                super(props);
+            }
+            render(){
+                const Style = {
+                    position:'absolute',
+                    backgroundColor:'blue',
+                    width:this.props.width,
+                    height:this.props.height,
+                    left:this.props.x,
+                    bottom:this.props.y
+                }
+                return(
+                    <div style={Style}>
+                        
+                    </div>
+                )
+            }
+        }
+
+        class Map extends React.Component{
+            // porp list rows:Array of rows{startX,StartY,endX}
+            // blockWidth:
+            // blockHeight:
+            constructor(props){
+                super(props);
+            }
+            createAllRows(){
+                var allRows = []; 
+                this.props.rows.forEach((val,index)=>{
+                    allRows.push(this.createBlockRow(index));
+                });
+                //console.log(allRows);
+                return allRows;
+            }
+            createBlockRow(index){
+                var blockArray = [];
+                for(var i = this.props.rows[index].startX;
+                    i<=this.props.rows[index].endX-this.props.blockWidth;
+                    i+=this.props.blockWidth){
+                    console.log(this.props.blockWidth);
+                    blockArray.push(<Block x={i} 
+                                    y={this.props.rows[index].startY} 
+                                    width={this.props.blockWidth}    
+                                    height={this.props.blockHeight}    />);
+                }
+                return blockArray;
+            }
+            render(){
+                return(
+                <div>
+                    {this.createAllRows()}
+                </div>
+                    )
+            }
+        }
+
+ReactDOM.render(<App />, document.getElementById('greeting-div'));
+      </script>
+  </body>
+</html>
